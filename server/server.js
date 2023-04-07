@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
 
@@ -9,6 +10,7 @@ const port = 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 // statically serve everything in the dist folder on the route '/dist'
 app.use('/dist', express.static(path.join(__dirname, '../dist/')));
@@ -16,9 +18,11 @@ app.use('/dist', express.static(path.join(__dirname, '../dist/')));
 // Route for all recipe related features
 const recipeRouter = require('./routes/recipeRoute');
 const tastyRouter = require('./routes/tastyRoute');
+const authRoute = require('./routes/authRoute');
 
 app.use('/tasty', tastyRouter)
 app.use('/recipe', recipeRouter);
+app.use('/user', authRoute);
 
 // serve index.html on the route '/'.
 // The '/*' is to make sure refresh in browser works with frontend routing (https://ui.dev/react-router-cannot-get-url-refresh)
