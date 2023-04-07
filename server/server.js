@@ -13,6 +13,11 @@ app.use(express.json());
 // statically serve everything in the dist folder on the route '/dist'
 app.use('/dist', express.static(path.join(__dirname, '../dist/')));
 
+// Route for all recipe related features
+const recipeRouter = require('./routes/recipeRoute');
+
+app.use('/recipe', recipeRouter);
+
 // serve index.html on the route '/'.
 // The '/*' is to make sure refresh in browser works with frontend routing (https://ui.dev/react-router-cannot-get-url-refresh)
 if (process.env.NODE_ENV === 'production') {
@@ -20,6 +25,7 @@ if (process.env.NODE_ENV === 'production') {
     res.status(200).sendFile(path.join(__dirname, '../dist/index.html'))
   );
 }
+
 /*
  * To-Do: Add a 404 page backup route
  */
