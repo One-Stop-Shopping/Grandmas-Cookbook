@@ -20,6 +20,9 @@
   },
   "homepage": "https://github.com/One-Stop-Shopping/One-Stop-Shopping#readme",
   "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@mui/base": "^5.0.0-alpha.124",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.11.16",
     "@mui/styled-engine-sc": "^5.11.11",
