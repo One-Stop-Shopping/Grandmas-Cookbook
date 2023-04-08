@@ -14,9 +14,12 @@ It is a good practice to have id in the table, to provide a stable reference poi
     id SERIAL PRIMARY KEY, 
     url VARCHAR(255) UNIQUE NOT NULL,
     title VARCHAR(255) NOT NULL,
+    description VARCHAR (255),
     ingredientList JSON,
     directions JSON,
-    image_path VARCHAR(255),
+    tastyId INTEGER,
+    imagePath VARCHAR(255),
+    userId INTEGER REFERENCES users (id)
   )
   
   Store the image in file system and store the path to image file in the image_path column of recipes table.
@@ -26,20 +29,25 @@ It is a good practice to have id in the table, to provide a stable reference poi
   CREATE TABLE recipeImages (
     id SERIAL PRIMARY KEY,
     image BYTEA,
-    recipe_id VARCHAR(255) REFERENCES recipes (id),
+    recipeId INTEGER REFERENCES recipes (id)
   )
 
   CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL
+  )
+
+  CREATE TABLE tasty_tags (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255)
   )
   
-  Join table for the many to many relation between recipes and users 
-  CREATE TABLE users_recipes (
+  Join table for the many-to-many relationship between recipes and tasty_tags
+  CREATE TABLE recipes_tasty_tags (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users (id),
-    recipe_id INTEGER REFERENCES recipes (id),
+    recipeId INTEGER REFERENCES recipes (id),
+    tagId INTEGER REFERENCES tasty_tags (id)
   )
  */
 
