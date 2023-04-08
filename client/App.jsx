@@ -1,14 +1,12 @@
 import React from "react";
-
-//Delete this later
+import { CssBaseline } from "@mui/material";
+import Grid from './containers/cardGrid.jsx';
 
 // eslint-disable-next-line no-unused-vars
-function App(props) {
+function App() {
 
     return (
-        <div>
-            <h1>Hello!!!</h1>
-        </div>
+        <Grid/>
     );
 };
 
