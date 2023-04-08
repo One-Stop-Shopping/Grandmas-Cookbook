@@ -19,8 +19,13 @@ tastyApiController.tastyAutoCompleteQuery = (req, res, next) => {
 
     fetch(`${url}recipes/${type}?prefix=${query}`, options)
         .then(result => result.json())
-        .then(json => {
-            res.locals.queryData = json;
+        .then(dataJson => {
+            const resultArray = dataJson.results;
+            const searchVals = [];
+            resultArray.forEach((el) => {
+                searchVals.push(el.search_value);
+            })
+            res.locals.queryData = searchVals;
             next();
         })
         .catch((err) => {
@@ -59,7 +64,51 @@ tastyApiController.tastyList = (req, res, next) => {
     fetch(`${url}recipes/${type}?from=${start}&size=${size}${tags.length > 0 ? `&tags=${tags}`: ''}${q.length > 0 ? `&q=${tags}`: ''}`, options)
         .then(result => result.json())
         .then(json => {
-            res.locals.tastyList = json;
+            const resultArray = json.results;
+            const dishes = [];
+            for (let i = 0; i < resultArray.length; i++) {
+                if (resultArray[i] === undefined || resultArray[i] === null) continue;
+                let el = resultArray[i];
+                const preparations = [];
+                const recipeTags = [];
+                const ingredients = [];
+
+                if (el.instructions !== undefined && el.instructions !== null) {
+                    for (let j = 0; j < el.instructions.length; j++) {
+                        const instruction = el.instructions[j];
+                        if (instruction === undefined || instruction === null) continue;
+                        preparations.push(instruction.display_text);
+                    }
+                }
+
+                if (el.tags !== undefined && el.tags !== null) {
+                    for (let a = 0; a < el.tags.length; a++) {
+                        const tag = el.tags[a];
+                        if (tag === undefined || tag === 0 || tag === null) continue;
+                        recipeTags.push(tag.name);
+                    }
+                }
+
+                if (i === 17) break;
+                if (el.sections[0].components !== undefined && el.sections[0].components !== null) {
+                    for (let b = 0; b < el.sections[0].components.length; b++) {
+                        const ingredient = el.sections[0].components[b];
+                        if (ingredient === undefined || ingredient === null) continue;
+                        ingredients.push(ingredient.raw_text);
+                    }
+                }
+
+                dishes.push({
+                    tasty_id: el.id,
+                    title: el.name,
+                    description: `${el.total_time_tier.display_tier} - ${el.description}`,
+                    directions: preparations,
+                    ingredients,
+                    tags: recipeTags,
+                    imageUrl: el.thumbnail_url
+                })                
+            }
+            res.locals.tastyList = dishes;
             next();
         })
         .catch((err) => {
@@ -71,6 +120,34 @@ tastyApiController.tastyList = (req, res, next) => {
 }
 
 // tastyList({body:{start: 0, size: 20, tags: ['under_30_minutes'], q:['pasta']}});
+
+tastyApiController.tastyGetTags = (req, res, next) => {
+    const type = tastyTypes.tags.LIST;
+
+    fetch(`${url}tags/${type}`, options)
+	.then(result => result.json())
+    .then(json => {
+        const tastyTags = json.results;
+        const tags = [];
+
+        tastyTags.forEach((tag) => (
+            tags.push(tag.name)
+        ))
+
+        res.locals.tags = tags;
+        next();
+    })
+    .catch((err) => {
+        next({
+            log: `Error encountered in tastyApiController/tastyGetTags function. ${err}`,
+            message: 'Could not query the data',
+        })
+    });   
+}
+
+// tastyGetTags();
+
+// TODO: implement finding similar recipe as an extension
 
 tastyApiController.tastyFindSimilarRecipeByID = (req, res, next) => {
     const id = req.body.id;
@@ -87,10 +164,12 @@ tastyApiController.tastyFindSimilarRecipeByID = (req, res, next) => {
                 log: `Error encountered in tastyApiController/tastyFindSimilarRecipeByID function. ${err}`,
                 message: 'Could not query the data',
             })
-        });   
+        });
 }
 
-// tastyId({body:{id: 8138}});
+// tastyFindSimilarRecipeByID({body:{id: 8138}});
+
+// TODO: POSSIBLY REMOVE AS THIS ENDPOINT IS REDUNDANT
 
 tastyApiController.tastyGetMoreInfo = (req, res, next) => {
     const id = req.body.id;
@@ -112,6 +191,8 @@ tastyApiController.tastyGetMoreInfo = (req, res, next) => {
 
 // tastyGetMoreInfo({body:{id: 8138}});
 
+// TODO: implement parsing of tips/reviews as an extension
+
 tastyApiController.tastyGetTipsForID = (req, res, next) => {
     const start = req.body.start;
     const size = req.body.size;
@@ -120,7 +201,7 @@ tastyApiController.tastyGetTipsForID = (req, res, next) => {
 
     fetch(`${url}${type}/list?id=${id}&from=${start}&size=${size}`, options)
         .then(result => result.json())
-        .then(json => {
+        .then(json => {    
             res.locals.tips = json;
             next();
         })
@@ -134,25 +215,7 @@ tastyApiController.tastyGetTipsForID = (req, res, next) => {
 
 // tastyGetTipsForID({body:{id: 8138}});
 
-
-tastyApiController.tastyGetTags = (req, res, next) => {
-    const type = tastyTypes.tags.LIST;
-
-    fetch(`${url}tags/${type}`, options)
-	.then(result => result.json())
-    .then(json => {
-        res.locals.tags = json;
-        next();
-    })
-    .catch((err) => {
-        next({
-            log: `Error encountered in tastyApiController/tastyGetTags function. ${err}`,
-            message: 'Could not query the data',
-        })
-    });   
-}
-
-// tastyGetTags();
+// TODO: implement parsing of feed as an extension
 
 tastyApiController.tastyGetFeed = (req, res, next) => {
     const type = tastyTypes.feeds.LIST;
