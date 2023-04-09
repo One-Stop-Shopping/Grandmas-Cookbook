@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable radix */
 const db = require('../models/databaseModels');
 
@@ -28,7 +29,7 @@ databaseController.getAllRecipes = (req, res, next) => {
   const allRecipeQuery = `SELECT * FROM recipes`;
   db.query(allRecipeQuery)
     .then((data) => {
-      res.locals.recipes = camelCaseTheKey(data.rows);
+      res.locals = camelCaseTheKey(data.rows);
       return next();
     })
     .catch((error) =>
@@ -63,7 +64,7 @@ databaseController.addRecipe = (req, res, next) => {
 
   db.query(addRecipeQuery, values)
     .then((data) => {
-      res.locals.newRecipe = camelCaseTheKey(data.rows);
+      res.locals = camelCaseTheKey(data.rows)[0];
       return next();
     })
     .catch((error) =>
@@ -106,7 +107,7 @@ databaseController.updateRecipe = (req, res, next) => {
 
   db.query(updateRecipeQuery, values)
     .then((data) => {
-      res.locals.updatedRecipe = camelCaseTheKey(data.rows);
+      res.locals = camelCaseTheKey(data.rows)[0];
       return next();
     })
     .catch((error) =>

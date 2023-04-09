@@ -17,11 +17,12 @@ router.post('/add', databaseController.addRecipe, (req, res, next) => {
   res.status(200).json(res.locals);
 });
 
-// Update a recipe in the database
+// Update a recipe with a specific id in the database
 router.put('/update/:id', databaseController.updateRecipe, (req, res, next) => {
   res.status(200).json(res.locals);
 });
 
+// Delete the recipe with a specific id in the database
 router.delete(
   '/delete/:id',
   databaseController.deleteRecipe,
