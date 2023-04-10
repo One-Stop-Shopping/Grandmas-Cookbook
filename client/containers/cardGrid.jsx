@@ -11,7 +11,7 @@ import { Typography,
         CardMedia,  
         Grid, 
         Container } from '@mui/material';
-import MediaCard from '../components/mediaCard.jsx'
+import MediaCard from '../components/recipeCard.jsx'
 
 function CardGrid () {
     return (
