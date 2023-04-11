@@ -11,7 +11,7 @@ import { Typography,
         CardMedia,  
         Grid, 
         Container } from '@mui/material';
-import MediaCard from '../components/recipeCard.jsx'
+import RecipeCard from '../components/recipeCard.jsx'
 
 function CardGrid () {
     return (
@@ -32,7 +32,12 @@ function CardGrid () {
                         </Typography>
                         <div>
                             <Grid container spacing={2} justify='center'>
-                                <MediaCard/>
+                                <RecipeCard/>
+                                <RecipeCard/>
+                                <RecipeCard/>
+                                <RecipeCard/>
+                                <RecipeCard/>
+                                <RecipeCard/>
                             </Grid>
                         </div>
 
