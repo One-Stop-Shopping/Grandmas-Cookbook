@@ -1,8 +1,7 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable radix */
-const fs = require('fs/promises');
-const path = require('path');
 const db = require('../models/databaseModels');
+const { deleteFileFromS3 } = require('../utils/awsS3Connection');
 
 const databaseController = {};
 
@@ -61,7 +60,7 @@ databaseController.addRecipe = (req, res, next) => {
     JSON.stringify(ingredientList),
     JSON.stringify(directions),
     tastyId,
-    res.locals.imageFileName || imagePath,
+    res.locals.awsimagePath || imagePath,
   ];
 
   db.query(addRecipeQuery, values)
@@ -123,18 +122,27 @@ databaseController.updateImage = (req, res, next) => {
     SELECT imagePath FROM recipes WHERE id = $1
   ) as oldImagePath;
   `;
-  const values = [parseInt(id), res.locals.imageFileName];
+  const values = [parseInt(id), res.locals.awsimagePath];
 
   db.query(updateImageQuery, values)
     .then((data) => {
       res.locals = camelCaseTheKey(data.rows)[0];
+      const oldImagePath = res.locals.oldimagepath;
       if (
-        res.locals.oldimagepath &&
-        res.locals.imagePath !== res.locals.oldimagepath
+        oldImagePath &&
+        oldImagePath.includes(
+          'https://grandmas-cookbook-scratch-project.s3.amazonaws.com/images'
+        ) &&
+        res.locals.imagePath !== oldImagePath
       ) {
+        return deleteFileFromS3(oldImagePath);
+
+        // Delete the image file on local disk. Not used.
+        /*
         return fs.unlink(
           path.join(__dirname, '../../public/images/', res.locals.oldimagepath)
         );
+        */
       }
       return null;
     })
@@ -162,10 +170,20 @@ databaseController.deleteRecipe = (req, res, next) => {
   db.query(deleteRecipeQuery, values)
     .then((data) => {
       const imagePath = data.rows[0].imagepath;
-      if (imagePath) {
+      if (
+        imagePath &&
+        imagePath.includes(
+          'https://grandmas-cookbook-scratch-project.s3.amazonaws.com/images'
+        )
+      ) {
+        return deleteFileFromS3(imagePath);
+
+        // Delete the image file on local disk. Not used.
+        /*
         return fs.unlink(
           path.join(__dirname, '../../public/images/', imagePath)
         );
+        */
       }
       return null;
     })
