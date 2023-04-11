@@ -61,11 +61,11 @@ tastyApiController.tastyList = (req, res, next) => {
 
     q.join(',');
 
-    fetch(`${url}recipes/${type}?from=${start}&size=${size}${tags.length > 0 ? `&tags=${tags}`: ''}${q.length > 0 ? `&q=${tags}`: ''}`, options)
+    fetch(`${url}recipes/${type}?from=${start}&size=${size}${tags.length > 0 ? `&tags=${tags}`: ''}${q.length > 0 ? `&q=${q}`: ''}`, options)
         .then(result => result.json())
         .then(json => {
             const resultArray = json.results;
-            const dishes = [];
+            let dishes = [];
             for (let i = 0; i < resultArray.length; i++) {
                 if (resultArray[i] === undefined || resultArray[i] === null) continue;
                 let el = resultArray[i];
@@ -89,25 +89,29 @@ tastyApiController.tastyList = (req, res, next) => {
                     }
                 }
 
-                if (i === 17) break;
-                if (el.sections[0].components !== undefined && el.sections[0].components !== null) {
-                    for (let b = 0; b < el.sections[0].components.length; b++) {
-                        const ingredient = el.sections[0].components[b];
-                        if (ingredient === undefined || ingredient === null) continue;
-                        ingredients.push(ingredient.raw_text);
+                if (el.sections !== undefined && el.sections !== null) {
+                    if (el.sections[0] !== undefined && el.sections[0] !== null) {
+                        for (let b = 0; b < el.sections[0].components.length; b++) {
+                            const ingredient = el.sections[0].components[b];
+                            if (ingredient === undefined || ingredient === null) continue;
+                            ingredients.push(ingredient.raw_text);
+                        }
                     }
                 }
 
                 dishes.push({
                     tasty_id: el.id,
                     title: el.name,
-                    description: `${el.total_time_tier.display_tier} - ${el.description}`,
+                    description: `${(el.total_time_tier !== undefined) ? el.total_time_tier : ''} - ${el.description}`,
                     directions: preparations,
                     ingredients,
                     tags: recipeTags,
                     imageUrl: el.thumbnail_url
                 })                
             }
+            dishes = dishes.filter(el => 
+                el.directions.length !== 0 && el.ingredients.length !== 0
+            );
             res.locals.tastyList = dishes;
             next();
         })
