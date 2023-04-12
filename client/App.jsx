@@ -1,12 +1,41 @@
-import React from "react";
-import { CssBaseline } from "@mui/material";
-import Grid from './containers/cardGrid.jsx';
+import React, { useState } from "react";
+import { Typography,  
+    AppBar,
+    Container,
+    Toolbar } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CardGrid from './containers/cardGrid.jsx';
 
-// eslint-disable-next-line no-unused-vars
+const theme = createTheme({
+    palette: {
+        primary: {
+            main: '#FFE8D6'
+        },
+        secondary: {
+            main: '#DDBEA9'
+        }, 
+        ternary: {
+            main: '#CB997E'
+        }
+    }
+})
+
 function App() {
 
     return (
-        <Grid/>
+        <ThemeProvider theme={theme}>
+            <header>
+                <Typography align='center' variant='h1' color='primary'>
+                    {'Grandma\'s Cookbook'}
+                </Typography>
+                <div className="actionHeader">
+                        <Typography variant='h2' align='center' color='secondary'>
+                            Recipes
+                        </Typography>
+                </div>
+            </header>
+            <CardGrid/>
+        </ThemeProvider>
     );
 };
 

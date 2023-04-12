@@ -1,8 +1,10 @@
 body {
     background-color: $ternary;
+    display: flex;
+    flex-direction: column;
 }
 
 
-h1 {
-    color: $primary
-}
+// h1 {
+//     color: $primary
+// }
