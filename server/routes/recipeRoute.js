@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const scrapingController = require('../controller/scrapingController');
 const databaseController = require('../controller/databaseController');
+const dalleImageController = require('../controller/dalleImageController');
 
 // Scrape info for a specific URL provided
 router.get('/scrapeurl', scrapingController, (req, res, next) => {
@@ -13,14 +14,29 @@ router.get('/all', databaseController.getAllRecipes, (req, res, next) => {
 });
 
 // Add a new recipe to the database
-router.post('/add', databaseController.addRecipe, (req, res, next) => {
-  res.status(200).json(res.locals);
-});
+router.post(
+  '/add',
+  dalleImageController.generateImage,
+  databaseController.addRecipe,
+  (req, res, next) => {
+    res.status(200).json(res.locals);
+  }
+);
 
-// Update a recipe with a specific id in the database
+// Update a recipe (except image) with a specific id in the database. The request shall have the recipe id in url parameter and all other information (except imagePath) in the request body.
 router.put('/update/:id', databaseController.updateRecipe, (req, res, next) => {
   res.status(200).json(res.locals);
 });
+
+// Update a recipe image with a specific id in the database. The request shall have the recipe id in url parameter and recipe title in the body.
+router.put(
+  '/update/image/:id',
+  dalleImageController.generateImage,
+  databaseController.updateImage,
+  (req, res, next) => {
+    res.status(200).json(res.locals);
+  }
+);
 
 // Delete the recipe with a specific id in the database
 router.delete(
