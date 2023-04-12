@@ -40,8 +40,8 @@ function CardGrid () {
                                     {card.desc}
                                     </Typography>
                                 </CardContent>
-                                </Card>
-                            </Grid>))}
+                            </Card>
+                        </Grid>))}
                     </Grid>
                 </Container>
             </div>
