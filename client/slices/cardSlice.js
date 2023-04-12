@@ -1,21 +1,21 @@
 const { createSlice } = require('@reduxjs/toolkit');
 
 const cardSlice = createSlice({
-    name: 'card',
+  name: 'card',
 
-    initialState: {
-        recipes: [],
+  initialState: {
+    recipes: [],
+  },
+
+  reducers: {
+    init: (state, param) => {
+      const { payload } = param;
+      const tempState = state;
+      tempState.recipes = [...state.recipes, ...payload];
     },
-
-    reducers: {
-        init: (state, param) => {
-            const { payload } = param;
-            const tempState = state;
-            tempState.recipes = [...state.recipes, payload];
-        },
-    }
-})
+  },
+});
 
 const { actions, reducer } = cardSlice;
 export const { init } = actions;
-export default reducer
+export default reducer;
