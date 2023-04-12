@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client'
-import App from './App.jsx';
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
-import rootReducer from "./slices/cardSlice";
+import App from './App.jsx';
+import cardReducer from "./slices/cardSlice";
 
 import styles from './scss/application.scss'
 
 const store = configureStore({
-    reducer: rootReducer
+    reducer: cardReducer
 });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
