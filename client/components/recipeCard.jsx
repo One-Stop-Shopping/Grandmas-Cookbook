@@ -9,7 +9,7 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 // tell daniel to have a key for each of the cards that he uses
 
-function RecipeCard() {
+function RecipeCard({ title, image }) {
   // need to loop through the the fetch data
 
   // const [saveEdit, setSaveEdit] = useToggle();
@@ -35,16 +35,16 @@ function RecipeCard() {
           component="img"
           alt="recipe image"
           height="140"
-          image="https://assets.epicurious.com/photos/6422f296a7a825dfcad11894/1:1/w_120,c_limit/CitrusStorage_HERO_032323_49551.jpg"
+          image={image}
         />
         <CardContent>
           <Typography
             gutterBottom
             variant="h5"
             component="div"
-            contenteditable="true"
+            // contentEditable="true"
           >
-            Recipe Name
+            {title}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             Ipsum

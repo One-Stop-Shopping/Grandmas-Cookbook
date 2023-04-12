@@ -1,5 +1,5 @@
 // import Button from '@mui/material/Button';
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -16,6 +16,8 @@ import {
 } from '@mui/material';
 import RecipeCard from '../components/recipeCard.jsx';
 import AddRecipeModal from '../components/addRecipePage/AddRecipeModal.jsx';
+import { init } from '../slices/cardSlice';
+import { useSelector, useDispatch } from 'react-redux';
 
 function CardGrid() {
   const [openAddRecipe, setOpenAddRecipe] = React.useState(false);
@@ -25,6 +27,17 @@ function CardGrid() {
   const handleOpenAddRecipe = () => {
     setOpenAddRecipe(true);
   };
+
+  const { recipes } = useSelector((state) => state);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    fetch('/recipe/all', { method: 'GET' })
+      .then((res) => res.json())
+      .then((data) => {
+        dispatch(init(data));
+      });
+  }, []);
 
   return (
     <>
@@ -43,21 +56,30 @@ function CardGrid() {
               Ipsum lorem
             </Typography>
             <div>
-              <Grid container spacing={2} justify="center">
-                <RecipeCard />
-                <RecipeCard />
-                <RecipeCard />
-                <RecipeCard />
-                <RecipeCard />
-                <RecipeCard />
-                <Button onClick={handleOpenAddRecipe}>Get New Recipe</Button>
-              </Grid>
+              <Container className="classes.cardGrid" maxWidth="md">
+                <Grid container spacing={4}>
+                  {recipes.map((card) => (
+                    <Grid item key={card.id} xs={12} sm={6} md={4}>
+                      <Card
+                        sx={{
+                          height: '100%',
+                          display: 'flex',
+                          flexDirection: 'column',
+                        }}
+                      >
+                        <RecipeCard title={card.title} image={card.imagePath} />
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Container>
+              <Button onClick={handleOpenAddRecipe}>Get New Recipe</Button>
+              <AddRecipeModal
+                open={openAddRecipe}
+                handleClose={handleCloseAddRecipe}
+              />
             </div>
           </Container>
-          <AddRecipeModal
-            open={openAddRecipe}
-            handleClose={handleCloseAddRecipe}
-          />
         </div>
       </main>
     </>
