@@ -15,7 +15,9 @@ app.use('/dist', express.static(path.join(__dirname, '../dist/')));
 
 // Route for all recipe related features
 const recipeRouter = require('./routes/recipeRoute');
+const tastyRouter = require('./routes/tastyRoute');
 
+app.use('/tasty', tastyRouter)
 app.use('/recipe', recipeRouter);
 
 // serve index.html on the route '/'.

@@ -4,8 +4,7 @@ import { Typography,
     Container,
     Toolbar } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Grid from './containers/cardGrid';
-import Modal from './components/modal'
+import CardGrid from './containers/cardGrid.jsx';
 
 const theme = createTheme({
     palette: {
@@ -21,9 +20,7 @@ const theme = createTheme({
     }
 })
 
-// eslint-disable-next-line no-unused-vars
 function App() {
-    const [ modalBool, showModal ] = useState(false)
 
     return (
         <ThemeProvider theme={theme}>
@@ -35,10 +32,9 @@ function App() {
                         <Typography variant='h2' align='center' color='secondary'>
                             Recipes
                         </Typography>
-                        <Modal/>
                 </div>
             </header>
-            <Grid/>
+            <CardGrid/>
         </ThemeProvider>
     );
 };

@@ -9,14 +9,16 @@ import { Typography,
         CardContent, 
         Grid, 
         Container } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import RecipeCard from '../components/recipeCard.jsx'
 import { init } from '../slices/cardSlice'
+import { useSelector, useDispatch} from 'react-redux'
+
+
 
 function CardGrid () {
-    const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
+    const { recipes } = useSelector(state=>state)
     const dispatch = useDispatch();
-    const { recipes } = useSelector(state=>state);
 
     useEffect(()=> {
         dispatch(init({ title: 'Title', desc: 'This should be a description', instructions:'instructions' }))
@@ -32,14 +34,7 @@ function CardGrid () {
                                 <Card
                                 sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
                                 >
-                                <CardContent sx={{ flexGrow: 1 }}>
-                                    <Typography gutterBottom variant="h5" component="h2">
-                                    {card.title}
-                                    </Typography>
-                                    <Typography>
-                                    {card.desc}
-                                    </Typography>
-                                </CardContent>
+                                <RecipeCard/>
                             </Card>
                         </Grid>))}
                     </Grid>
