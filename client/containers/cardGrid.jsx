@@ -1,23 +1,17 @@
-// import Button from '@mui/material/Button';
 import React, { useEffect } from 'react';
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import { Typography,  
-        AppBar,
         Card, 
-        CardContent, 
         Grid, 
         Container } from '@mui/material';
-import RecipeCard from '../components/recipeCard.jsx'
-import { init } from '../slices/cardSlice'
 import { useSelector, useDispatch} from 'react-redux'
-
+import RecipeCard from '../components/recipeCard.jsx'
+import { init } from '../slices/cardSlice';
+import UrlAddForm from '../components/forms/urlAddForm.jsx';
 
 
 function CardGrid () {
 
-    const { recipes } = useSelector(state=>state)
+    const { recipes } = useSelector(state=>state.card)
     const dispatch = useDispatch();
 
     useEffect(()=> {
@@ -39,9 +33,11 @@ function CardGrid () {
                         </Grid>))}
                     </Grid>
                 </Container>
+                <UrlAddForm/>
             </div>
+            
         </main>
     )
 }
 
-export default CardGrid
+export default CardGrid;
