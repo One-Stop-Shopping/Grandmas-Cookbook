@@ -196,4 +196,30 @@ databaseController.deleteRecipe = (req, res, next) => {
     );
 };
 
+databaseController.getUserRecipe = (req, res, next) => {
+  const { id } = req.params;
+
+  const queryString = `
+  SELECT recipes.url, recipes.title, recipes.ingredientlist, recipes.directions, recipes.tastyid, recipes.imagepath
+  FROM recipes
+  JOIN users
+  ON recipes.userid = users.id
+  WHERE users.id = $1;
+  `;
+  const values = [parseInt(id)];
+  db.query(queryString, values)
+  .then((data) => {
+    res.locals = camelCaseTheKey(data.rows);
+    return next();
+
+  })
+  .then(() => next())
+  .catch((error) =>
+    next({
+      log: `Error encountered in databaseController.getUserRecipe, ${error}`,
+      message: 'Error encountered when querying the database.',
+    })
+  );
+};
+
 module.exports = databaseController;
