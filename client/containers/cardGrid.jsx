@@ -59,67 +59,55 @@ function CardGrid() {
   }, [recipes, filterKeyword]);
 
   return (
-    <>
-      <header>
-        <Typography align="center" variant="h1">
-          {"Grandma's Cookbook"}
-        </Typography>
-      </header>
-      <main>
-        <div>
-          <Container maxWidth="sm">
-            <Typography variant="h2" align="center" color="#FFE8D6">
-              Recipes
-            </Typography>
-            <Typography variant="h5" align="center" color="grey" paragraph>
-              Ipsum lorem
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Button variant="contained" onClick={handleOpenAddRecipe}>
-                  Get New Recipe
-                </Button>
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label="Find Your Recipe"
-                  variant="standard"
-                  value={filterKeyword}
-                  onChange={onFilterKeywordChange}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Container className="classes.cardGrid" maxWidth="md">
-                  <Grid container spacing={4}>
-                    {filteredRecipes.map((card) => (
-                      <Grid item key={card.id} xs={12} sm={6} md={4}>
-                        <Card
-                          sx={{
-                            height: '100%',
-                            display: 'flex',
-                            flexDirection: 'column',
-                          }}
-                        >
-                          <RecipeCard
-                            title={card.title}
-                            image={card.imagePath}
-                          />
-                        </Card>
-                      </Grid>
-                    ))}
-                  </Grid>
-                </Container>
-                <AddRecipeModal
-                  open={openAddRecipe}
-                  handleClose={handleCloseAddRecipe}
-                />
-              </Grid>
+    <main>
+      <div>
+        <Container maxWidth="lg">
+          <Typography variant="h5" align="center" color="grey" paragraph>
+            Ipsum lorem
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sx={{ textAlign: 'center' }}>
+              <Button variant="contained" onClick={handleOpenAddRecipe}>
+                Get New Recipe
+              </Button>
             </Grid>
-          </Container>
-        </div>
-      </main>
-    </>
+            <Grid item xs={12} sx={{ textAlign: 'center' }}>
+              <TextField
+                label="Find Your Recipe"
+                variant="standard"
+                value={filterKeyword}
+                onChange={onFilterKeywordChange}
+                inputProps={{ style: { fontSize: 32 } }}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Container className="classes.cardGrid">
+                <Grid container spacing={3}>
+                  {filteredRecipes.map((card) => (
+                    <Grid item key={card.id} xs={12} sm={4} md={3}>
+                      <Card
+                        sx={{
+                          height: '100%',
+                          display: 'flex',
+                          flexDirection: 'column',
+                        }}
+                      >
+                        <RecipeCard title={card.title} image={card.imagePath} />
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Container>
+              <AddRecipeModal
+                open={openAddRecipe}
+                handleClose={handleCloseAddRecipe}
+              />
+            </Grid>
+          </Grid>
+        </Container>
+      </div>
+    </main>
   );
 }
 
