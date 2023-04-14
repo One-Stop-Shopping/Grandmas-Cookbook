@@ -1,33 +1,53 @@
 import React, { useRef } from 'react';
-import { TextField, Button, Box, Typography} from '@mui/material';
+import { TextField, Button, Box, Typography, CircularProgress, Backdrop} from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux'
-import { setUrlResult } from '../../slices/modalSlice';
+import { setUrlResult, clearUrlResult } from '../../slices/modalSlice';
 import { addCard } from '../../slices/cardSlice'
 
 function UrlAddForm() {
     const fieldValue = useRef('');
     const dispatch = useDispatch();
     const {urlScrape} = useSelector(state=>state.modal)
+    const [open, setOpen] = React.useState(false);
+    
+    const handleClose = () => {
+      setOpen(false);
+    };
+    const handleOpen = () => {
+      setOpen(true);
+    };
     // const { ingredientList, directions, title} = urlScrape
     
     async function handleSubmit(e) {
         e.preventDefault();
+        handleOpen();
         await fetch(`http://localhost:3000/recipe/scrapeUrl/?url=${fieldValue.current.value}`)
         .then((res) => res.json())
         .then((data) => {
           dispatch(setUrlResult(data))
-        });
+        })
+        .then(() => handleClose())
     };
 
     function addHandler(e) {
-        e.preventDefault()
-        dispatch(addCard(urlScrape))
+        e.preventDefault();
+        handleOpen();
+        fetch('/recipe/add', 
+            {method: 'POST', 
+            body: JSON.stringify(urlScrape),
+            headers: {
+                'Content-type': 'application/json',
+            }})
+            .then(res => res.json())
+            .then(data => dispatch(addCard(data)))
+            .then(() => handleClose())
+            .then(() => dispatch(clearUrlResult()))
     }
 
 
     return (
         <Box>
-            <TextField id="outlined-basic" inputRef={fieldValue}/>
+            <TextField id="urlField" label='URL' inputRef={fieldValue}/>
             <Button onClick={handleSubmit}>Submit</Button>
             {!urlScrape.ingredientList ? null : 
             <>
@@ -53,6 +73,14 @@ function UrlAddForm() {
                 <Button onClick={addHandler}>Add to my Recipes</Button>   
             </>
             }
+
+            <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={open}
+            onClick={handleClose}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </Box>
     );
 }
