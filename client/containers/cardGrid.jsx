@@ -1,4 +1,3 @@
-// import Button from '@mui/material/Button';
 import React, { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -39,8 +38,8 @@ function CardGrid() {
     setOpenAddRecipe(true);
   };
 
-  const { recipes } = useSelector((state) => state);
-  const dispatch = useDispatch();
+    const { recipes } = useSelector(state=>state.card)
+    const dispatch = useDispatch();
 
   useEffect(() => {
     fetch('/recipe/all', { method: 'GET' })
