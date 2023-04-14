@@ -47,4 +47,8 @@ router.delete(
   }
 );
 
+router.get('/userrecipe/:id', databaseController.getUserRecipe, (req, res) => {
+  res.status(200).json(res.locals);
+})
+
 module.exports = router;
