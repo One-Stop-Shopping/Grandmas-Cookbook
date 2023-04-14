@@ -13,6 +13,7 @@ import {
   Button,
   Grid,
   Container,
+  TextField,
 } from '@mui/material';
 import RecipeCard from '../components/recipeCard.jsx';
 import AddRecipeModal from '../components/addRecipePage/AddRecipeModal.jsx';
@@ -20,7 +21,17 @@ import { init } from '../slices/cardSlice';
 import { useSelector, useDispatch } from 'react-redux';
 
 function CardGrid() {
+  // States to support live filtering of the recipes
+  const [filteredRecipes, setFilteredRecipes] = React.useState([]);
+  const [filterKeyword, setFilterKeyword] = React.useState('');
+
+  // State to support the add recipe modal.
   const [openAddRecipe, setOpenAddRecipe] = React.useState(false);
+
+  // Handler for control the filter keyword in text field.
+  const onFilterKeywordChange = (e) => setFilterKeyword(e.target.value);
+
+  // Two handlers for open and close the add recipe modal.
   const handleCloseAddRecipe = () => {
     setOpenAddRecipe(false);
   };
@@ -39,27 +50,42 @@ function CardGrid() {
       });
   }, []);
 
+  useEffect(() => {
+    setFilteredRecipes(
+      recipes.filter((recipe) =>
+        recipe.title.toLowerCase().includes(filterKeyword.toLowerCase())
+      )
+    );
+  }, [recipes, filterKeyword]);
+
   return (
-    <>
-      <header>
-        <Typography align="center" variant="h1">
-          {"Grandma's Cookbook"}
-        </Typography>
-      </header>
-      <main>
-        <div>
-          <Container maxWidth="sm">
-            <Typography variant="h2" align="center" color="#FFE8D6">
-              Recipes
-            </Typography>
-            <Typography variant="h5" align="center" color="grey" paragraph>
-              Ipsum lorem
-            </Typography>
-            <div>
-              <Container className="classes.cardGrid" maxWidth="md">
-                <Grid container spacing={4}>
-                  {recipes.map((card) => (
-                    <Grid item key={card.id} xs={12} sm={6} md={4}>
+    <main>
+      <div>
+        <Container maxWidth="lg">
+          <Typography variant="h5" align="center" color="grey" paragraph>
+            Ipsum lorem
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sx={{ textAlign: 'center' }}>
+              <Button variant="contained" onClick={handleOpenAddRecipe}>
+                Get New Recipe
+              </Button>
+            </Grid>
+            <Grid item xs={12} sx={{ textAlign: 'center' }}>
+              <TextField
+                label="Find Your Recipe"
+                variant="standard"
+                value={filterKeyword}
+                onChange={onFilterKeywordChange}
+                inputProps={{ style: { fontSize: 32 } }}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Container className="classes.cardGrid">
+                <Grid container spacing={3}>
+                  {filteredRecipes.map((card) => (
+                    <Grid item key={card.id} xs={12} sm={4} md={3}>
                       <Card
                         sx={{
                           height: '100%',
@@ -73,16 +99,15 @@ function CardGrid() {
                   ))}
                 </Grid>
               </Container>
-              <Button onClick={handleOpenAddRecipe}>Get New Recipe</Button>
               <AddRecipeModal
                 open={openAddRecipe}
                 handleClose={handleCloseAddRecipe}
               />
-            </div>
-          </Container>
-        </div>
-      </main>
-    </>
+            </Grid>
+          </Grid>
+        </Container>
+      </div>
+    </main>
   );
 }
 

@@ -30,11 +30,11 @@ function RecipeCard({ title, image }) {
 
   if (deleteButton)
     return (
-      <Card sx={{ maxWidth: 345 }}>
+      <Card sx={{ maxWidth: 600 }}>
         <CardMedia
           component="img"
           alt="recipe image"
-          height="140"
+          // height="140"
           image={image}
         />
         <CardContent>
