@@ -5,6 +5,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import UrlAddForm from '../forms/urlAddForm.jsx';
+import APIAddForm from '../forms/ApiAddForm.jsx';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -45,7 +46,7 @@ export default function BasicTabs() {
         <UrlAddForm/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Typography>Tasty API Form</Typography>
+        <APIAddForm/>
       </TabPanel>
     </Box>
   );

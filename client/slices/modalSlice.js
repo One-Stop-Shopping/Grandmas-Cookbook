@@ -6,23 +6,27 @@ const modalSlice = createSlice({
 
     initialState: {
         urlScrape: {},
-        keywordScrape: [],
+        keywordResults: null,
     },
 
     reducers: {
         setUrlResult: (state, param) => {
             const { payload } = param;
-            const tempState = state;
-            tempState.urlScrape = Object.assign(payload, state.urlScrape);
+            state.urlScrape = Object.assign(payload, state.urlScrape);
+        },
+        clearUrlResult: (state) => {
+            state.urlScrape = {};
         },
         setKeywordResult: (state, param) => {
             const { payload } = param;
-            const tempState = state;
-            tempState.keywordScrape = [...state, payload]
-        }
+            state.keywordResults = [...state, payload]
+        },
+        clearKeywordResult: (state) => {
+            state.keywordResults = [];
+        },
     }
 })
 
 const { actions, reducer } = modalSlice;
-export const { setKeywordResult, setUrlResult } = actions;
+export const { setKeywordResult, setUrlResult, clearKeywordResult, clearUrlResult } = actions;
 export default reducer
