@@ -5,17 +5,16 @@ import Grid from '@mui/material/Grid';
 import Modal from '@mui/material/Modal';
 import AddRecipeTab from './AddRecipeTab.jsx';
 
-const style = {
+const boxStyle = {
   position: 'absolute',
-  top: '60%',
+  top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 800,
+  width: '50%',
   bgcolor: '#CB997E',
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
-  overflow:'scroll',
 };
 
 export default function AddRecipeModal({ open, handleClose }) {
@@ -25,8 +24,9 @@ export default function AddRecipeModal({ open, handleClose }) {
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
+      sx={{ overflow: 'scroll', }}
     >
-      <Box sx={style}>
+      <Box sx={boxStyle}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
           Get New Recipe
         </Typography>

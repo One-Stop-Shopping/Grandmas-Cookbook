@@ -6,59 +6,70 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
+import { useSelector, useDispatch } from 'react-redux';
+import MoreButton from "./recipeCardButtons/MoreButton.jsx";
+import { deleteCard } from '../slices/cardSlice';
 
-// tell daniel to have a key for each of the cards that he uses
 
-function RecipeCard({ title, image }) {
+// const useStyles = makeStyles(theme => ({
+//   root: {
+//     "& .MuiPaper-root": {
+//       background: 'black'
+//     }
+//   }
+// }));
+
+
+function RecipeCard({ recipe, children, type, addHandler }) {
   // need to loop through the the fetch data
-
+  // console.log('type', type)
   // const [saveEdit, setSaveEdit] = useToggle();
 
-  const [saveEditButton, setSaveEditButton] = React.useState('Edit');
-  function setSaveEditButtonLogic(id) {
-    if (saveEditButton === 'Edit') {
-      setSaveEditButton('Save');
-    } else {
-      setSaveEditButton('Edit');
-    }
-  }
+  const dispatch = useDispatch();
 
   const [deleteButton, setDeleteButton] = React.useState(true);
   const setDeleteButtonLogic = () => {
     setDeleteButton((prev) => !prev);
+    fetch(`/recipe/delete/${recipe.id}`, {
+      method: 'DELETE',
+    })
+    .then((res) => {
+      if (res.ok) return dispatch(deleteCard(recipe));
+      throw new Error(res.status);
+    })
+    .catch((err) => console.log(`Error code: ${err}`));
   };
 
   if (deleteButton)
     return (
-      <Card sx={{ maxWidth: 600 }}>
+      <Card sx={{ maxWidth: 600,
+      }}
+      style={{ border: "none", background:'#DDBEA9' }}
+       >
         <CardMedia
           component="img"
           alt="recipe image"
+          sx={{width: '258px', height: '256px',  alignItems:'flex-end'}}
           // height="140"
-          image={image}
+          image={recipe.imagePath}
         />
-        <CardContent>
+        <CardContent >
           <Typography
             gutterBottom
-            variant="h5"
+            variant="h6"
             component="div"
-            // contentEditable="true"
           >
-            {title}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Ipsum
+            {recipe.title}
           </Typography>
         </CardContent>
-        <CardActions>
-          <Button size="small">More</Button>
-          <Button size="small" onClick={setSaveEditButtonLogic}>
-            {saveEditButton}
-          </Button>
-          <Button size="small" onClick={setDeleteButtonLogic}>
+        <CardActions> 
+          {type === 'addForm' ? <Button color="success" onClick={addHandler(recipe)}>Add</Button> : null}
+          <MoreButton recipe={recipe}/>
+          <Button color="error"  size="small" onClick={setDeleteButtonLogic}>
             Delete
           </Button>
         </CardActions>
+        {children}
       </Card>
     );
 }

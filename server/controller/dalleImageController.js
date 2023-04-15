@@ -16,6 +16,7 @@ const convertStrToFileName = (str) =>
 const dalleImageController = {};
 
 dalleImageController.generateImage = async (req, res, next) => {
+  console.log('reached generateImage');
   const { imagePath } = req.body;
   if (!imagePath) {
     try {
@@ -53,6 +54,7 @@ dalleImageController.generateImage = async (req, res, next) => {
 
       return next();
     } catch (error) {
+      console.log("error in dalle-ai")
       return next({
         log: `Error encountered in dalleImageController.generateImage, ${error}`,
         message: 'Error encountered when generating image via the DallE AI.',

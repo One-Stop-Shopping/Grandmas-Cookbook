@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, AppBar, Container, Toolbar } from '@mui/material';
+import { Typography, AppBar, Container, Toolbar, MuiPaper } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CardGrid from './containers/cardGrid.jsx';
 
@@ -15,6 +15,14 @@ const theme = createTheme({
       main: '#CB997E',
     },
   },
+  components: { 
+    MuiPaper: { 
+      styleOverrides: { 
+        root: {
+          'background': '#DDBEA9',
+        }
+      }
+    }}
 });
 
 function App() {

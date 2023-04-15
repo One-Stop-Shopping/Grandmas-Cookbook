@@ -51,12 +51,13 @@ databaseController.addRecipe = (req, res, next) => {
     tastyId,
     imagePath,
   } = req.body;
-
+  console.log('reach addRecipe');
   const addRecipeQuery = `INSERT INTO recipes (url, title, description, ingredientList, directions, tastyId, imagePath) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
+  // To also cover Tasty API entries where description can be long.
   const values = [
     url,
     title,
-    description,
+    !description || description.slice(0, 250),
     JSON.stringify(ingredientList),
     JSON.stringify(directions),
     tastyId,
