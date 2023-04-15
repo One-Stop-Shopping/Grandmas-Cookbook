@@ -92,7 +92,7 @@ function CardGrid() {
                           flexDirection: 'column',
                         }}
                       >
-                        <RecipeCard title={card.title} image={card.imagePath} />
+                        <RecipeCard recipe={card} title={card.title} image={card.imagePath} />
                       </Card>
                     </Grid>
                   ))}

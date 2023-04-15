@@ -6,31 +6,34 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
+import { useSelector, useDispatch } from 'react-redux';
+import MoreButton from '../components/recipeCardButtons/MoreButton.jsx';
+import { deleteCard } from '../slices/cardSlice';
 
 // tell daniel to have a key for each of the cards that he uses
 
-function RecipeCard({ title, image }) {
+function RecipeCard({ recipe, title, image, children }) {
   // need to loop through the the fetch data
 
   // const [saveEdit, setSaveEdit] = useToggle();
 
-  const [saveEditButton, setSaveEditButton] = React.useState('Edit');
-  function setSaveEditButtonLogic(id) {
-    if (saveEditButton === 'Edit') {
-      setSaveEditButton('Save');
-    } else {
-      setSaveEditButton('Edit');
-    }
-  }
+  const dispatch = useDispatch();
 
   const [deleteButton, setDeleteButton] = React.useState(true);
   const setDeleteButtonLogic = () => {
     setDeleteButton((prev) => !prev);
+    fetch(`/recipe/delete/${recipe.id}`, {
+      method: 'DELETE',
+    })
+    .then((res) => dispatch(deleteCard(recipe)))
   };
 
   if (deleteButton)
     return (
-      <Card sx={{ maxWidth: 600 }}>
+      <Card sx={{ maxWidth: 600}}
+      style={{ border: "none", boxShadow: "none" }}
+
+       >
         <CardMedia
           component="img"
           alt="recipe image"
@@ -40,9 +43,8 @@ function RecipeCard({ title, image }) {
         <CardContent>
           <Typography
             gutterBottom
-            variant="h5"
+            variant="h6"
             component="div"
-            // contentEditable="true"
           >
             {title}
           </Typography>
@@ -50,15 +52,14 @@ function RecipeCard({ title, image }) {
             Ipsum
           </Typography>
         </CardContent>
-        <CardActions>
-          <Button size="small">More</Button>
-          <Button size="small" onClick={setSaveEditButtonLogic}>
-            {saveEditButton}
-          </Button>
+        <CardActions sx={{ flexDisplay: "column" }}
+        >
+          <MoreButton recipe={recipe}/>
           <Button size="small" onClick={setDeleteButtonLogic}>
             Delete
           </Button>
         </CardActions>
+        {children}
       </Card>
     );
 }
