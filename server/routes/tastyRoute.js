@@ -1,15 +1,17 @@
 const router = require('express').Router();
 const tastyController = require('../controller/tastyAPI/tastyApiController');
 
-router.get('/search', tastyController.tastyAutoCompleteQuery, (req, res, next) => {
+router.get('/search/:searchTerm', tastyController.tastyAutoCompleteQuery, (req, res, next) => {
     res.status(200).send(res.locals.queryData);
   });
 
-router.get('/tagQuery', tastyController.tastyList, (req, res, next) => {
+//   http://localhost:3000/tasty/tagQuery/?from=0&size=50&tags=[]&q=${keywords}'
+
+router.get('/tagQuery/:start/:size/:tags/:q', tastyController.tastyList, (req, res, next) => {
     res.status(200).send(res.locals.tastyList);
 });
 
-router.get('/findSimilarRecipe', tastyController.tastyFindSimilarRecipeByID, (req, res, next) => {
+router.get('/findSimilarRecipe/:id', tastyController.tastyFindSimilarRecipeByID, (req, res, next) => {
     res.status(200).send(res.locals.similarRecipe);
 });
 
