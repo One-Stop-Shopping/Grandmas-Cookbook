@@ -14,7 +14,7 @@ const options = {
 }
 
 tastyApiController.tastyAutoCompleteQuery = (req, res, next) => {
-    const query = req.params.searchTerm;
+    const query = req.body.query;
     const type = tastyTypes.recipes.AUTO_COMPLETE;
 
     fetch(`${url}recipes/${type}?prefix=${query}`, options)
@@ -37,36 +37,29 @@ tastyApiController.tastyAutoCompleteQuery = (req, res, next) => {
 }
 
 tastyApiController.tastyList = (req, res, next) => {
-    const start = req.params.start;
-    const size = req.params.size;
-    let tags = req.params.tags;
-    let q = req.params.q;
+    const start = req.body.start;
+    const size = req.body.size;
+    const tags = req.body.tags;
+    const q = req.body.q;
     const type = tastyTypes.recipes.LIST;
-    if (tags !== 'null') {
-        tags = tags.split(' ');
-        for (let i = 0; i < tags.length; i++) {
-            if (i === 0) continue;
-            else {
-                tags[i] = `%20${tags[i]}`
-            }
+
+    for (let i = 0; i < tags.length; i++) {
+        if (i === 0) continue;
+        else {
+            tags[i] = `%20${tags[i]}`
         }
-        tags.join(',');
-    } else {
-        tags = '';
     }
 
-    if (q !== 'null') {
-        q = q.split(' ');
-        for (let i = 0; i < q.length; i++) {
-            if (i === 0) continue;
-            else {
-                q[i] = `%20${q[i]}`
-            }
+    tags.join(',');
+
+    for (let i = 0; i < q.length; i++) {
+        if (i === 0) continue;
+        else {
+            q[i] = `%20${q[i]}`
         }
-        q.join(',');
-    } else {
-        q = '';
     }
+
+    q.join(',');
 
     fetch(`${url}recipes/${type}?from=${start}&size=${size}${tags.length > 0 ? `&tags=${tags}`: ''}${q.length > 0 ? `&q=${q}`: ''}`, options)
         .then(result => result.json())
@@ -111,7 +104,7 @@ tastyApiController.tastyList = (req, res, next) => {
                     title: el.name,
                     description: `${(el.total_time_tier !== undefined) ? el.total_time_tier : ''} - ${el.description}`,
                     directions: preparations,
-                    ingredientList: ingredients,
+                    ingredients,
                     tags: recipeTags,
                     imageUrl: el.thumbnail_url
                 })                
@@ -161,7 +154,7 @@ tastyApiController.tastyGetTags = (req, res, next) => {
 // TODO: implement finding similar recipe as an extension
 
 tastyApiController.tastyFindSimilarRecipeByID = (req, res, next) => {
-    const id = req.params.id;
+    const id = req.body.id;
     const type = tastyTypes.recipes.LIST_SIMILARITIES;
 
     fetch(`${url}recipes/${type}?recipe_id=${id}`, options)
