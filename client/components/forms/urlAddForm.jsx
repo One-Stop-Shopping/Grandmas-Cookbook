@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { TextField, Button, Box, Typography, CircularProgress, Backdrop} from '@mui/material';
+import { TextField, Button, Box, Typography, CircularProgress, Backdrop, Alert} from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux'
 import { setUrlResult, clearUrlResult } from '../../slices/modalSlice';
 import { addCard } from '../../slices/cardSlice'
@@ -9,6 +9,7 @@ function UrlAddForm() {
     const dispatch = useDispatch();
     const {urlScrape} = useSelector(state=>state.modal)
     const [open, setOpen] = React.useState(false);
+    const [queryError, setQueryError] = React.useState(false);
     
     const handleClose = () => {
       setOpen(false);
@@ -20,17 +21,26 @@ function UrlAddForm() {
     
     async function handleSubmit(e) {
         e.preventDefault();
+        setQueryError(false)
         handleOpen();
         await fetch(`http://localhost:3000/recipe/scrapeUrl/?url=${fieldValue.current.value}`)
-        .then((res) => res.json())
+        .then((res) => {
+            if (res.ok) return res.json();
+            throw new Error(res.status);
+          })
         .then((data) => {
           dispatch(setUrlResult(data))
         })
         .then(() => handleClose())
+        .catch(() => {
+            setQueryError(true);
+            handleClose()
+        })
     };
 
     function addHandler(e) {
         e.preventDefault();
+        setQueryError(false);
         handleOpen();
         fetch('/recipe/add', 
             {method: 'POST', 
@@ -38,15 +48,23 @@ function UrlAddForm() {
             headers: {
                 'Content-type': 'application/json',
             }})
-            .then(res => res.json())
+            .then((res) => {
+                if (res.ok) return res.json();
+                throw new Error(res.status);
+              })
             .then(data => dispatch(addCard(data)))
             .then(() => handleClose())
             .then(() => dispatch(clearUrlResult()))
+            .catch(() => {
+                setQueryError(true);
+                handleClose()
+            })
     }
 
 
     return (
         <Box>
+             {queryError ? <Alert severity="error" style={{border: 'black 5px', background: '#DDBEA9'}}>Could not complete the search</Alert> : null}
             <TextField id="urlField" label='URL' inputRef={fieldValue}/>
             <Button onClick={handleSubmit}>Submit</Button>
             {!urlScrape.ingredientList ? null : 

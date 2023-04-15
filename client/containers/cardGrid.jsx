@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import {
   Typography,
   AppBar,
@@ -14,10 +13,10 @@ import {
   Container,
   TextField,
 } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux';
 import RecipeCard from '../components/recipeCard.jsx';
 import AddRecipeModal from '../components/addRecipePage/AddRecipeModal.jsx';
 import { init } from '../slices/cardSlice';
-import { useSelector, useDispatch } from 'react-redux';
 import { clearKeywordResult } from '../slices/modalSlice.js';
 
 function CardGrid() {
@@ -46,16 +45,20 @@ function CardGrid() {
 
   useEffect(() => {
     fetch('/recipe/all', { method: 'GET' })
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error(res.status);
+      })
       .then((data) => {
         dispatch(init(data));
-      });
+      })
+      .catch((err) => console.log(`Error code: ${err}`));
   }, []);
 
   useEffect(() => {
     setFilteredRecipes(
       recipes.filter((recipe) => {
-        console.log(recipe)
+        // console.log(recipe)
         return recipe.title.toLowerCase().includes(filterKeyword.toLowerCase())
     })
     );
@@ -65,12 +68,9 @@ function CardGrid() {
     <main>
       <div>
         <Container maxWidth="lg">
-          <Typography variant="h5" align="center" color="grey" paragraph>
-            Ipsum lorem
-          </Typography>
           <Grid container spacing={2}>
             <Grid item xs={12} sx={{ textAlign: 'center' }}>
-              <Button variant="contained" onClick={handleOpenAddRecipe}>
+              <Button variant="contained" onClick={handleOpenAddRecipe} sx={{marginTop: '16px'}}>
                 Get New Recipe
               </Button>
             </Grid>

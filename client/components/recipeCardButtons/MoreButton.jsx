@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useRef } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -7,7 +7,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateCard } from '../../slices/cardSlice';
-
+import { purple } from '@mui/material/colors';
 
 
 export default function MoreButton({recipe}) {
@@ -43,7 +43,7 @@ export default function MoreButton({recipe}) {
 
   const canEditLogic = () => {
     if (canEdit) {
-      
+      console.log('ingredientText', document.getElementById(`${recipe.id}ingredientText`).textContent)
       setSaveEditButton("Edit");
       fetch(`/recipe/update/${recipe.id}`, {
         method: 'PUT',
@@ -52,11 +52,15 @@ export default function MoreButton({recipe}) {
           'Content-type': 'application/json',
         },
       })
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error(res.status);
+      })
       .then((data) => {
         // console.log(data);
         dispatch(updateCard(data));
-      });
+      })
+      .catch((err) => console.log(`Error code: ${err}`));
     }
     else setSaveEditButton("Save");
     setCanEdit(state => !state);
@@ -84,7 +88,7 @@ export default function MoreButton({recipe}) {
 
   return (
     <div>
-      <Button onClick={handleClickOpen('paper')}>More</Button>
+      <Button color="success" onClick={handleClickOpen('paper')}>More</Button>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -121,8 +125,8 @@ export default function MoreButton({recipe}) {
         </DialogContent>
 
         <DialogActions>
-          <Button onClick = {canEditLogic}>{saveEditButton}</Button>
-          <Button onClick = {handleClose}>Close</Button>
+          <Button color="success" onClick = {canEditLogic}>{saveEditButton}</Button>
+          <Button color="warning" onClick = {handleClose}>Close</Button>
         </DialogActions>
       </Dialog>
     </div>

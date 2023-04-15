@@ -42,7 +42,7 @@ export default function BasicTabs() {
           onChange={handleChange}
           aria-label="basic tabs example"
         >
-          <Tab label="From URL" />
+          <Tab label="Food Network or Epicurious" />
           <Tab label="Keyword Search" />
         </Tabs>
       </Box>

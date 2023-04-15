@@ -12,8 +12,8 @@ It is a good practice to have id in the table, to provide a stable reference poi
 
   CREATE TABLE recipes (
     id SERIAL PRIMARY KEY, 
-    url VARCHAR(255) UNIQUE NOT NULL,
-    title VARCHAR(255) NOT NULL,
+    url VARCHAR(255),
+    title VARCHAR(255) UNIQUE NOT NULL,
     description VARCHAR (255),
     ingredientList JSON,
     directions JSON,

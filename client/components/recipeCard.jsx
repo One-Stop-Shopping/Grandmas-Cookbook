@@ -7,14 +7,22 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { useSelector, useDispatch } from 'react-redux';
-import MoreButton from '../components/recipeCardButtons/MoreButton.jsx';
+import MoreButton from "./recipeCardButtons/MoreButton.jsx";
 import { deleteCard } from '../slices/cardSlice';
 
-// tell daniel to have a key for each of the cards that he uses
+
+// const useStyles = makeStyles(theme => ({
+//   root: {
+//     "& .MuiPaper-root": {
+//       background: 'black'
+//     }
+//   }
+// }));
+
 
 function RecipeCard({ recipe, children, type, addHandler }) {
   // need to loop through the the fetch data
-  console.log('type', type)
+  // console.log('type', type)
   // const [saveEdit, setSaveEdit] = useToggle();
 
   const dispatch = useDispatch();
@@ -25,22 +33,27 @@ function RecipeCard({ recipe, children, type, addHandler }) {
     fetch(`/recipe/delete/${recipe.id}`, {
       method: 'DELETE',
     })
-    .then((res) => dispatch(deleteCard(recipe)))
+    .then((res) => {
+      if (res.ok) return dispatch(deleteCard(recipe));
+      throw new Error(res.status);
+    })
+    .catch((err) => console.log(`Error code: ${err}`));
   };
 
   if (deleteButton)
     return (
-      <Card sx={{ maxWidth: 600}}
-      style={{ border: "none", boxShadow: "none" }}
-
+      <Card sx={{ maxWidth: 600,
+      }}
+      style={{ border: "none", background:'#DDBEA9' }}
        >
         <CardMedia
           component="img"
           alt="recipe image"
+          sx={{width: '258px', height: '256px',  alignItems:'flex-end'}}
           // height="140"
           image={recipe.imagePath}
         />
-        <CardContent>
+        <CardContent >
           <Typography
             gutterBottom
             variant="h6"
@@ -49,11 +62,10 @@ function RecipeCard({ recipe, children, type, addHandler }) {
             {recipe.title}
           </Typography>
         </CardContent>
-        <CardActions sx={{ flexDisplay: "column" }}
-        > 
-          {type === 'addForm' ? <Button onClick={addHandler(recipe)}>Add something!</Button> : null}
+        <CardActions> 
+          {type === 'addForm' ? <Button color="success" onClick={addHandler(recipe)}>Add</Button> : null}
           <MoreButton recipe={recipe}/>
-          <Button size="small" onClick={setDeleteButtonLogic}>
+          <Button color="error"  size="small" onClick={setDeleteButtonLogic}>
             Delete
           </Button>
         </CardActions>
