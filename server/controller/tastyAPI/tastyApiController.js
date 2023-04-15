@@ -111,7 +111,7 @@ tastyApiController.tastyList = (req, res, next) => {
                     title: el.name,
                     description: `${(el.total_time_tier !== undefined) ? el.total_time_tier : ''} - ${el.description}`,
                     directions: preparations,
-                    ingredients,
+                    ingredientList: ingredients,
                     tags: recipeTags,
                     imageUrl: el.thumbnail_url
                 })                
