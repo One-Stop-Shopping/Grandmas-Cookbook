@@ -3,6 +3,7 @@ import { TextField, Button, Box, Typography, Backdrop, CircularProgress} from '@
 import { useSelector, useDispatch } from 'react-redux'
 import { setKeywordResult } from '../../slices/modalSlice';
 import { addCard } from '../../slices/cardSlice'
+import RecipeCard from '../recipeCard.jsx';
 
 function APIAddForm() {
     const keywordFieldValue = useRef('');
@@ -22,8 +23,8 @@ function APIAddForm() {
         e.preventDefault();
         handleOpen();
         
-        let keywords = keywordFieldValue.current.value.split(' ');
-        let tags = tagFieldValue.current.value.split(' ');
+        const keywords = keywordFieldValue.current.value.split(' ');
+        const tags = tagFieldValue.current.value.split(' ');
         
         let tagsQuery;
         let keywordsQuery;
@@ -61,10 +62,18 @@ function APIAddForm() {
             .then((res) => res.json())
             .then((data) => { console.log(data) })
             .then((data) => {
-                
+                for (let i = 0; i < data.length; i++) {
+                    let { title, ingredientList, directions } = data[i]
+                    <RecipeCard 
+                        type='APIForm'
+                        title= {title}
+                        ingredientList= {ingredientList}
+                        directions= {directions}
+                    /> 
+                }
             })
             .then(() => handleClose())
-            .then(() => dispatch(clearKeywordResult()))
+            // .then(() => dispatch(clearKeywordResult()))
     };
 
     function addHandler(e) {
