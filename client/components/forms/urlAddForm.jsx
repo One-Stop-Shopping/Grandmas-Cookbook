@@ -47,7 +47,7 @@ function UrlAddForm() {
 
     return (
         <Box>
-            <TextField id="outlined-basic" inputRef={fieldValue}/>
+            <TextField id="urlField" label='URL' inputRef={fieldValue}/>
             <Button onClick={handleSubmit}>Submit</Button>
             {!urlScrape.ingredientList ? null : 
             <>

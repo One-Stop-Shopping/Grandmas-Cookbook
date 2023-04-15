@@ -1,37 +1,91 @@
 import React, { useRef } from 'react';
-import { TextField, Button, Box, Typography} from '@mui/material';
+import { TextField, Button, Box, Typography, Backdrop, CircularProgress} from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux'
 import { setKeywordResult } from '../../slices/modalSlice';
 import { addCard } from '../../slices/cardSlice'
 
 function APIAddForm() {
-    const fieldValue = useRef('');
+    const keywordFieldValue = useRef('');
+    const tagFieldValue = useRef('');
     const dispatch = useDispatch();
-    const { KeywordResults } = useSelector(state=>state.modal)
+    const { KeywordResults, clearKeywordResult } = useSelector(state=>state.modal)
+    const [open, setOpen] = React.useState(false);
+    
+    const handleClose = () => {
+      setOpen(false);
+    };
+    const handleOpen = () => {
+      setOpen(true);
+    };
     
     async function handleSubmit(e) {
         e.preventDefault();
-        const keywords = JSON.stringify(fieldValue.current.value)
-        await fetch(`http://localhost:3000/tasty/tagQuery/?from=0&size=50&tags=[]&q=${keywords}'`, 
-        {method: 'GET', 
-        headers: {
-            'Content-type': 'application/json',
-        }})
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data)
-        });
+        handleOpen();
+        
+        let keywords = keywordFieldValue.current.value.split(' ');
+        let tags = tagFieldValue.current.value.split(' ');
+        
+        let tagsQuery;
+        let keywordsQuery;
+
+        console.log(tags, keywords)
+
+        if (keywords[0] === '') {
+            keywordsQuery = 'null'
+            keywords.shift()
+        } else {
+            keywordsQuery = keywords.shift();
+        }
+        
+        if (tags[0] === '') {
+            tagsQuery = 'null'
+            tags.shift()
+        } else {
+            tagsQuery = tags.shift();
+        }
+        
+
+        while (keywords.length >= 1) {
+            keywordsQuery += `%20${  keywords.shift()}`
+        }
+        
+        while (tags.length >= 1) {
+            tagsQuery += `%20${  tags.shift()}`
+        }
+
+        console.log('tags', tagsQuery, 'keywords', keywordsQuery)
+
+        const query = 'http://localhost:3000/tasty/tagQuery/0/50/' + tagsQuery.toLowerCase() + '/' + keywordsQuery.toLowerCase()
+
+        await fetch(query)
+            .then((res) => res.json())
+            .then((data) => { console.log(data) })
+            .then((data) => {
+                
+            })
+            .then(() => handleClose())
+            .then(() => dispatch(clearKeywordResult()))
     };
-// ?from=0&size=20&tags=under_30_minutes%20chiken'
+
     function addHandler(e) {
         e.preventDefault()
-        dispatch(addCard(KeywordResults))
+        handleOpen();
+        fetch('/recipe/add', 
+            {method: 'POST', 
+            body: JSON.stringify(e),
+            headers: {
+                'Content-type': 'application/json',
+            }})
+            .then(res => res.json())
+            .then(data => dispatch(addCard(data)))
+            .then(() => handleClose())
     }
 
 
     return (
         <Box>
-            <TextField id="outlined-basic" inputRef={fieldValue}/>
+            <TextField id="tagsField" label='tags' inputRef={tagFieldValue}/>
+            <TextField id="keywordField" label='keywords' inputRef={keywordFieldValue}/>
             <Button onClick={handleSubmit}>Submit</Button>
             {/* {!keywordResult ? null :  */}
             <>
@@ -57,6 +111,13 @@ function APIAddForm() {
                 <Button onClick={addHandler}>Add to my Recipes</Button>   
             </>
             {/* } */}
+            <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={open}
+            onClick={handleClose}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </Box>
     );
 }
