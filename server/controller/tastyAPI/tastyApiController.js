@@ -50,7 +50,7 @@ tastyApiController.tastyList = (req, res, next) => {
                 tags[i] = `%20${tags[i]}`
             }
         }
-        tags.join(',');
+        tags = tags.join('');
     } else {
         tags = '';
     }
@@ -63,10 +63,11 @@ tastyApiController.tastyList = (req, res, next) => {
                 q[i] = `%20${q[i]}`
             }
         }
-        q.join(',');
+        q = q.join('');
     } else {
         q = '';
     }
+
 
     fetch(`${url}recipes/${type}?from=${start}&size=${size}${tags.length > 0 ? `&tags=${tags}`: ''}${q.length > 0 ? `&q=${q}`: ''}`, options)
         .then(result => result.json())
@@ -117,7 +118,7 @@ tastyApiController.tastyList = (req, res, next) => {
                 })                
             }
             dishes = dishes.filter(el => 
-                el.directions.length !== 0 && el.ingredients.length !== 0
+                el.directions.length !== 0 && el.ingredientList.length !== 0
             );
             res.locals.tastyList = dishes;
             next();
