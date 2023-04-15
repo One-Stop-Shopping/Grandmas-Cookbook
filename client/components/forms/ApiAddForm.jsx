@@ -21,18 +21,20 @@ function APIAddForm() {
       setOpen(true);
     };
     
-    function addHandler(e, props) {
-        e.preventDefault();
+    const addHandler = (recipe) => {
         handleOpen();
+        console.log('recipe', recipe);
+        return () => {
         fetch('/recipe/add', 
             {method: 'POST', 
-            body: JSON.stringify(props),
+            body: JSON.stringify(recipe),
             headers: {
                 'Content-type': 'application/json',
             }})
             .then(res => res.json())
             .then(data => dispatch(addCard(data)))
             .then(() => handleClose())
+        }
     }
 
     async function handleSubmit(e) {
@@ -74,7 +76,7 @@ function APIAddForm() {
             .then((data) => {
                 for (let i = 0; i < 5; i++) {
                     const { title, ingredientList, directions } = data[i];
-                    cardArr.push(<RecipeCard key={title} type="addForm" title={title} ingredientList={ingredientList} directions={directions} addHandler={addHandler} />)
+                    cardArr.push(<RecipeCard key={title} type='addForm' recipe={data[i]} addHandler={addHandler} />)
                 }
                 dispatch(setKeywordResult(cardArr))
             })

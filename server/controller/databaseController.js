@@ -51,12 +51,12 @@ databaseController.addRecipe = (req, res, next) => {
     tastyId,
     imagePath,
   } = req.body;
-
+  console.log(req.body);
   const addRecipeQuery = `INSERT INTO recipes (url, title, description, ingredientList, directions, tastyId, imagePath) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
   const values = [
-    url,
+    url || title,
     title,
-    description,
+    description.slice(0, 250),
     JSON.stringify(ingredientList),
     JSON.stringify(directions),
     tastyId,

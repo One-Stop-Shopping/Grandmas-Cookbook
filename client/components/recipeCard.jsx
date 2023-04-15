@@ -12,9 +12,9 @@ import { deleteCard } from '../slices/cardSlice';
 
 // tell daniel to have a key for each of the cards that he uses
 
-function RecipeCard({ recipe, title, image, children }) {
+function RecipeCard({ recipe, children, type, addHandler }) {
   // need to loop through the the fetch data
-
+  console.log('type', type)
   // const [saveEdit, setSaveEdit] = useToggle();
 
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ function RecipeCard({ recipe, title, image, children }) {
           component="img"
           alt="recipe image"
           // height="140"
-          image={image}
+          image={recipe.imagePath}
         />
         <CardContent>
           <Typography
@@ -46,14 +46,12 @@ function RecipeCard({ recipe, title, image, children }) {
             variant="h6"
             component="div"
           >
-            {title}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Ipsum
+            {recipe.title}
           </Typography>
         </CardContent>
         <CardActions sx={{ flexDisplay: "column" }}
-        >
+        > 
+          {type === 'addForm' ? <Button onClick={addHandler(recipe)}>Add something!</Button> : null}
           <MoreButton recipe={recipe}/>
           <Button size="small" onClick={setDeleteButtonLogic}>
             Delete

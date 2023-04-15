@@ -4,7 +4,9 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import { useDispatch } from 'react-redux'
 import UrlAddForm from '../forms/urlAddForm.jsx';
+import { clearKeywordResult } from '../../slices/modalSlice.js';
 import APIAddForm from '../forms/ApiAddForm.jsx';
 
 function TabPanel(props) {
@@ -25,9 +27,11 @@ function TabPanel(props) {
 
 export default function BasicTabs() {
   const [value, setValue] = React.useState(0);
+  const dispatch = useDispatch();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    dispatch(clearKeywordResult())
   };
 
   return (

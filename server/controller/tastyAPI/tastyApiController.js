@@ -114,7 +114,7 @@ tastyApiController.tastyList = (req, res, next) => {
                     directions: preparations,
                     ingredientList: ingredients,
                     tags: recipeTags,
-                    imageUrl: el.thumbnail_url
+                    imagePath: el.thumbnail_url
                 })                
             }
             dishes = dishes.filter(el => 

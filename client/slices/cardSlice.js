@@ -16,14 +16,14 @@ const cardSlice = createSlice({
         addCard: (state, param) => {
             const { payload } = param;
             const tempState = state;
-            fetch('/recipe/add', 
-                {method: 'POST', 
-                body: JSON.stringify(payload),
-                headers: {
-                    'Content-type': 'application/json',
-                }})
-                .then(res => res.json())
-                .then(data => console.log(data));
+            // fetch('/recipe/add', 
+            //     {method: 'POST', 
+            //     body: JSON.stringify(payload),
+            //     headers: {
+            //         'Content-type': 'application/json',
+            //     }})
+            //     .then(res => res.json())
+            //     .then(data => console.log(data));
             tempState.recipes = [...state.recipes, payload]
         },
         updateCard: (state, param) => {

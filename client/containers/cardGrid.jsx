@@ -18,8 +18,10 @@ import RecipeCard from '../components/recipeCard.jsx';
 import AddRecipeModal from '../components/addRecipePage/AddRecipeModal.jsx';
 import { init } from '../slices/cardSlice';
 import { useSelector, useDispatch } from 'react-redux';
+import { clearKeywordResult } from '../slices/modalSlice.js';
 
 function CardGrid() {
+  const dispatch = useDispatch();
   // States to support live filtering of the recipes
   const [filteredRecipes, setFilteredRecipes] = React.useState([]);
   const [filterKeyword, setFilterKeyword] = React.useState('');
@@ -33,13 +35,14 @@ function CardGrid() {
   // Two handlers for open and close the add recipe modal.
   const handleCloseAddRecipe = () => {
     setOpenAddRecipe(false);
+    dispatch(clearKeywordResult())
   };
   const handleOpenAddRecipe = () => {
     setOpenAddRecipe(true);
   };
 
     const { recipes } = useSelector(state=>state.card)
-    const dispatch = useDispatch();
+   
 
   useEffect(() => {
     fetch('/recipe/all', { method: 'GET' })
@@ -51,9 +54,10 @@ function CardGrid() {
 
   useEffect(() => {
     setFilteredRecipes(
-      recipes.filter((recipe) =>
-        recipe.title.toLowerCase().includes(filterKeyword.toLowerCase())
-      )
+      recipes.filter((recipe) => {
+        console.log(recipe)
+        return recipe.title.toLowerCase().includes(filterKeyword.toLowerCase())
+    })
     );
   }, [recipes, filterKeyword]);
 
