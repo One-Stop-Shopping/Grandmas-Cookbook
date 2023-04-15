@@ -1,12 +1,15 @@
+import RecipeCard from '../components/recipeCard.jsx'
+
 const { createSlice } = require('@reduxjs/toolkit');
 const React = require('react')
+
 
 const modalSlice = createSlice({
     name: 'modal',
 
     initialState: {
         urlScrape: {},
-        keywordResults: null,
+        keywordResults: [],
     },
 
     reducers: {
@@ -19,7 +22,7 @@ const modalSlice = createSlice({
         },
         setKeywordResult: (state, param) => {
             const { payload } = param;
-            state.keywordResults = [...state, payload]
+            state.keywordResults = [...state.keywordResults, ...payload]
         },
         clearKeywordResult: (state) => {
             state.keywordResults = [];

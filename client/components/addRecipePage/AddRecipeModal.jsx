@@ -7,7 +7,7 @@ import AddRecipeTab from './AddRecipeTab.jsx';
 
 const style = {
   position: 'absolute',
-  top: '30%',
+  top: '60%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 800,
@@ -15,6 +15,7 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
+  overflow:'scroll',
 };
 
 export default function AddRecipeModal({ open, handleClose }) {
