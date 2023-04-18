@@ -76,8 +76,8 @@ module.exports = {
      */
     historyApiFallback: true,
     proxy: {
-      '/apps': 'http://localhost:3000',
-      '/auth': 'http://localhost:3000',
+      '/recipe': 'http://localhost:3000',
+      '/tasty': 'http://localhost:3000',
     },
   },
 };
