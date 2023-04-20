@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { TextField, Button, Box, Typography, Backdrop, CircularProgress, Alert} from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux'
-import { setKeywordResult } from '../../slices/modalSlice.js';
+import { setKeywordResult } from '../../slices/modalSlice';
 import { addCard } from '../../slices/cardSlice'
 import RecipeCard from '../recipeCard.jsx';
 

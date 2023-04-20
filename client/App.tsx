@@ -1,7 +1,14 @@
-import React, { useState } from 'react';
-import { Typography, AppBar, Container, Toolbar, MuiPaper } from '@mui/material';
+import React, { FC, useState, ReactElement} from 'react';
+import { Palette, Typography, AppBar, Container, Toolbar } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import CardGrid from './containers/cardGrid.jsx';
+import CardGrid from './containers/cardGrid';
+
+// TODO: extend palette with terniary
+// interface customPalette extends Palette {
+//   tertiary:
+// }
+
+//MuiPaper might need import later
 
 const theme = createTheme({
   palette: {
@@ -11,9 +18,9 @@ const theme = createTheme({
     secondary: {
       main: '#DDBEA9',
     },
-    ternary: {
-      main: '#CB997E',
-    },
+    // tertiary: {
+    //   main: '#CB997E',
+    // },
   },
   components: { 
     MuiPaper: { 
@@ -25,7 +32,7 @@ const theme = createTheme({
     }}
 });
 
-function App() {
+const App : FC<{}> = () => {
   return (
     <ThemeProvider theme={theme}>
       <header>

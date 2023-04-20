@@ -8,7 +8,7 @@ const tastyApiController = {};
 const options = {
     method: 'GET',
     headers: {
-        'X-RapidAPI-Key': '8403d18d56msh5d278e6cc8c7ebfp19889cjsne960dfd44ed5',
+        'X-RapidAPI-Key': 'e09d14a1famsh1357f106bfa3db5p13665djsn53706769ec4b',
         'X-RapidAPI-Host': 'tasty.p.rapidapi.com'
       }
 }
@@ -37,10 +37,10 @@ tastyApiController.tastyAutoCompleteQuery = (req, res, next) => {
 }
 
 tastyApiController.tastyList = (req, res, next) => {
-    const start = req.params.start;
-    const size = req.params.size;
-    let tags = req.params.tags;
-    let q = req.params.q;
+    const {start} = req.params;
+    const {size} = req.params;
+    let {tags} = req.params;
+    let {q} = req.params;
     const type = tastyTypes.recipes.LIST;
     if (tags !== 'null') {
         tags = tags.split(' ');
@@ -162,7 +162,7 @@ tastyApiController.tastyGetTags = (req, res, next) => {
 // TODO: implement finding similar recipe as an extension
 
 tastyApiController.tastyFindSimilarRecipeByID = (req, res, next) => {
-    const id = req.params.id;
+    const {id} = req.params;
     const type = tastyTypes.recipes.LIST_SIMILARITIES;
 
     fetch(`${url}recipes/${type}?recipe_id=${id}`, options)
@@ -184,7 +184,7 @@ tastyApiController.tastyFindSimilarRecipeByID = (req, res, next) => {
 // TODO: POSSIBLY REMOVE AS THIS ENDPOINT IS REDUNDANT
 
 tastyApiController.tastyGetMoreInfo = (req, res, next) => {
-    const id = req.body.id;
+    const {id} = req.body;
     const type = tastyTypes.recipes.GET_MORE_INFO;
 
     fetch(`${url}recipes/${type}?id=${id}`, options)
@@ -206,9 +206,9 @@ tastyApiController.tastyGetMoreInfo = (req, res, next) => {
 // TODO: implement parsing of tips/reviews as an extension
 
 tastyApiController.tastyGetTipsForID = (req, res, next) => {
-    const start = req.body.start;
-    const size = req.body.size;
-    const id = req.body.id;
+    const {start} = req.body;
+    const {size} = req.body;
+    const {id} = req.body;
     const type = tastyTypes.tips.TIPS;
 
     fetch(`${url}${type}/list?id=${id}&from=${start}&size=${size}`, options)
@@ -231,10 +231,10 @@ tastyApiController.tastyGetTipsForID = (req, res, next) => {
 
 tastyApiController.tastyGetFeed = (req, res, next) => {
     const type = tastyTypes.feeds.LIST;
-    const start = req.body.start;
-    const size = req.body.size;
+    const {start} = req.body;
+    const {size} = req.body;
     const timezone = '%2B0700';
-    const isVegetarian = req.body.isVegetarian;
+    const {isVegetarian} = req.body;
 
 
     fetch(`${url}feeds/${type}?size=${size}&timezone=${timezone}&vegetarian${isVegetarian}&from=${start}`, options)

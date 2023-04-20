@@ -1,5 +1,21 @@
 const { createSlice } = require('@reduxjs/toolkit');
 
+export interface Recipe {
+    id: number, 
+    title: String,
+    image: Blob,
+    ingredients: String[],
+    directions: String[]
+}
+
+export interface State {
+    recipes: Recipe[]
+}
+
+interface Param {
+    payload: Recipe
+}
+
 const cardSlice = createSlice({
   name: 'card',
 
@@ -8,12 +24,12 @@ const cardSlice = createSlice({
   },
 
     reducers: {
-        init: (state, param) => {
+        init: (state: State, param: Param) => {
             const { payload } = param;
             const tempState = state;
-            tempState.recipes = [...state.recipes, ...payload];
+            tempState.recipes = [...state.recipes, payload];
         },
-        addCard: (state, param) => {
+        addCard: (state: State, param: Param) => {
             const { payload } = param;
             const tempState = state;
             // fetch('/recipe/add', 
@@ -26,15 +42,15 @@ const cardSlice = createSlice({
             //     .then(data => console.log(data));
             tempState.recipes = [...state.recipes, payload]
         },
-        updateCard: (state, param) => {
+        updateCard: (state: State, param: Param) => {
             const { payload } = param;
-            const tempState = state;
-            tempState.recipes = tempState.recipes.map((recipe) => {
+            const tempState: Recipe[] = state.recipes;
+            const tempStateMap: Recipe[] = tempState.map((recipe) => {
                 if (recipe.id === payload.id) return payload;
                 return recipe;
             })
         },
-        deleteCard: (state, param) => {
+        deleteCard: (state: State, param: Param) => {
             const { payload } = param;
             const tempState = state;
             tempState.recipes = tempState.recipes.filter((recipe) => recipe.id !== payload.id)
