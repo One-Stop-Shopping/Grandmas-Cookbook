@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { useSelector, useDispatch } from 'react-redux';
-import MoreButton from "./recipeCardButtons/MoreButton.jsx";
+import MoreButton from "./recipeCardButtons/MoreButton";
 import { deleteCard } from '../slices/cardSlice';
 
 

@@ -14,10 +14,12 @@ import {
   TextField,
 } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
-import RecipeCard from '../components/recipeCard.jsx';
-import AddRecipeModal from '../components/addRecipePage/AddRecipeModal.jsx';
+import RecipeCard from '../components/recipeCard';
+import AddRecipeModal from '../components/addRecipePage/AddRecipeModal';
 import { init } from '../slices/cardSlice';
-import { clearKeywordResult } from '../slices/modalSlice.js';
+import { clearKeywordResult } from '../slices/modalSlice';
+import { RootState } from '../index';
+import { Recipe as Recipe } from '../slices/cardSlice';
 
 function CardGrid() {
   const dispatch = useDispatch();
@@ -29,7 +31,8 @@ function CardGrid() {
   const [openAddRecipe, setOpenAddRecipe] = React.useState(false);
 
   // Handler for control the filter keyword in text field.
-  const onFilterKeywordChange = (e) => setFilterKeyword(e.target.value);
+  //
+  const onFilterKeywordChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setFilterKeyword(e.target.value);
 
   // Two handlers for open and close the add recipe modal.
   const handleCloseAddRecipe = () => {
@@ -40,8 +43,21 @@ function CardGrid() {
     setOpenAddRecipe(true);
   };
 
-    const { recipes } = useSelector(state=>state.card)
-   
+  const recipesArray = useSelector<RootState, Recipe[]>((state) => state.card.recipes)
+  
+
+// import { configureStore } from '@reduxjs/toolkit'
+// // ...
+// const store = configureStore({
+//   reducer: {
+//     one: oneSlice.reducer,
+//     two: twoSlice.reducer,
+//   },
+// })
+// export type RootState = ReturnType<typeof store.getState>
+
+// export default store
+
 
   useEffect(() => {
     fetch('/recipe/all', { method: 'GET' })
