@@ -1,4 +1,4 @@
-#Grandma's Cookbook
+# Grandma's Cookbook
 
 Grandma's Cookbook is a recipe-sharing web application that allows users to browse and contribute recipes. The application is hosted on Github at https://github.com/One-Stop-Shopping/Grandmas-Cookbook.
 
