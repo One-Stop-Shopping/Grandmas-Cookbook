@@ -2,7 +2,7 @@ const cheerio = require('cheerio');
 const fetch = require('node-fetch');
 
 // Fetch from www.epicurious.com
-const scrapeEpicurious = (req, res, next) => {
+const scrapeEpicurious = (req, res, next) =>
   fetch(res.locals.url)
     .then((response) => response.text())
     .then((html) => {
@@ -36,10 +36,9 @@ const scrapeEpicurious = (req, res, next) => {
         message: 'Cannot connect to the provided URL. Please verify the URL.',
       })
     );
-};
 
 // Fetch from www.foodnetwork.com
-const scrapeFoodnetwork = (req, res, next) => {
+const scrapeFoodnetwork = (req, res, next) =>
   fetch(res.locals.url)
     .then((response) => response.text())
     .then((html) => {
@@ -68,18 +67,23 @@ const scrapeFoodnetwork = (req, res, next) => {
       res.locals.directions = directions;
 
       next();
-    });
-};
+    })
+    .catch((err) =>
+      next({
+        log: `Error encountered in scrapingController/scrapeFoodnetwork function. ${err}`,
+        message: 'Cannot connect to the provided URL. Please verify the URL.',
+      })
+    );
 
-module.exports = (req, res, next) => {
+module.exports = async (req, res, next) => {
   const { url } = req.query;
 
   res.locals.url = url;
 
   if (url.includes('epicurious')) {
-    scrapeEpicurious(req, res, next);
+    await scrapeEpicurious(req, res, next);
   } else if (url.includes('foodnetwork')) {
-    scrapeFoodnetwork(req, res, next);
+    await scrapeFoodnetwork(req, res, next);
   } else {
     next({
       log: 'Error encountered in scrapingController. Requested URL is not supported by this app.',
