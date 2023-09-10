@@ -5,6 +5,9 @@ const { deleteFileFromS3 } = require('../utils/awsS3Connection');
 
 const databaseController = {};
 
+/*
+  Helper function to covert all keys to camel case, for consistant and easy access on Frontend.
+*/
 const camelCaseTheKey = (databaseRowsArray) => {
   const camelCaseArray = databaseRowsArray.map((dbObj) => {
     const ccObj = {};
@@ -26,6 +29,9 @@ const camelCaseTheKey = (databaseRowsArray) => {
   return camelCaseArray;
 };
 
+/*
+  Middleware to get all recipes from database.
+*/
 databaseController.getAllRecipes = (req, res, next) => {
   const allRecipeQuery = `SELECT * FROM recipes`;
   db.query(allRecipeQuery)
@@ -41,6 +47,9 @@ databaseController.getAllRecipes = (req, res, next) => {
     );
 };
 
+/*
+  Middleware to add a new recipe to database.
+*/
 databaseController.addRecipe = (req, res, next) => {
   const {
     url,
@@ -77,6 +86,9 @@ databaseController.addRecipe = (req, res, next) => {
     );
 };
 
+/*
+  Middleware to update an existing recipe in database.
+*/
 databaseController.updateRecipe = (req, res, next) => {
   const { url, title, description, ingredientList, directions, tastyId } =
     req.body;
@@ -112,6 +124,9 @@ databaseController.updateRecipe = (req, res, next) => {
     );
 };
 
+/*
+  Middleware to update image of an existing recipe in database.
+*/
 databaseController.updateImage = (req, res, next) => {
   const { id } = req.params;
 
@@ -156,6 +171,9 @@ databaseController.updateImage = (req, res, next) => {
     );
 };
 
+/*
+  Middleware to delete an existing recipe from database.
+*/
 databaseController.deleteRecipe = (req, res, next) => {
   const { id } = req.params;
 
@@ -197,6 +215,9 @@ databaseController.deleteRecipe = (req, res, next) => {
     );
 };
 
+/*
+  Middleware to get recipe for a specific user from database.
+*/
 databaseController.getUserRecipe = (req, res, next) => {
   const { id } = req.params;
 
@@ -209,18 +230,17 @@ databaseController.getUserRecipe = (req, res, next) => {
   `;
   const values = [parseInt(id)];
   db.query(queryString, values)
-  .then((data) => {
-    res.locals = camelCaseTheKey(data.rows);
-    return next();
-
-  })
-  .then(() => next())
-  .catch((error) =>
-    next({
-      log: `Error encountered in databaseController.getUserRecipe, ${error}`,
-      message: 'Error encountered when querying the database.',
+    .then((data) => {
+      res.locals = camelCaseTheKey(data.rows);
+      return next();
     })
-  );
+    .then(() => next())
+    .catch((error) =>
+      next({
+        log: `Error encountered in databaseController.getUserRecipe, ${error}`,
+        message: 'Error encountered when querying the database.',
+      })
+    );
 };
 
 module.exports = databaseController;

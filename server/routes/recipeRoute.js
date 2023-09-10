@@ -47,8 +47,9 @@ router.delete(
   }
 );
 
+// Get recipes for a specific user
 router.get('/userrecipe/:id', databaseController.getUserRecipe, (req, res) => {
   res.status(200).json(res.locals);
-})
+});
 
 module.exports = router;
