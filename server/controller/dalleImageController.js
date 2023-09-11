@@ -4,17 +4,20 @@ const path = require('path');
 const { Readable } = require('stream');
 const { uploadeFileToS3 } = require('../utils/awsS3Connection');
 
+// Configuration for DALLE API
 const configuration = new Configuration({
   apiKey: process.env.DALLE_KEY,
 });
 
 const openai = new OpenAIApi(configuration);
 
+// Helper function to convert string to proper .jpg file name for storage.
 const convertStrToFileName = (str) =>
   `${str.toLowerCase().replace(/\s/gi, '-')}.jpg`;
 
 const dalleImageController = {};
 
+// Get AI-generated images from DALLE API
 dalleImageController.generateImage = async (req, res, next) => {
   console.log('reached generateImage');
   const { imagePath } = req.body;
@@ -54,7 +57,7 @@ dalleImageController.generateImage = async (req, res, next) => {
 
       return next();
     } catch (error) {
-      console.log("error in dalle-ai")
+      console.log('error in dalle-ai');
       return next({
         log: `Error encountered in dalleImageController.generateImage, ${error}`,
         message: 'Error encountered when generating image via the DallE AI.',

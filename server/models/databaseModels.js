@@ -4,7 +4,10 @@ require('dotenv').config();
 
 const pool = new Pool({
   // Secret PostgreSQL database URI stored in local .env
-  connectionString: process.env.DB_URI,
+  connectionString:
+    process.env.NODE_ENV === 'test'
+      ? process.env.DB_URI_TEST
+      : process.env.DB_URI,
 });
 
 /*
@@ -52,8 +55,9 @@ It is a good practice to have id in the table, to provide a stable reference poi
  */
 
 module.exports = {
+  // eslint-disable-next-line arrow-body-style
   query: (text, params, callback) => {
-    console.log('Executed query: ', text);
+    // console.log('Executed query: ', text);
 
     // Simplified version query (no need to connect or release in pool), but cannot be used for transaction(https://node-postgres.com/features/transactions).
     return pool.query(text, params, callback);
