@@ -2,8 +2,9 @@
 
 Grandma's Cookbook is a recipe-sharing web application that allows users to browse and contribute recipes. The application is hosted on Github at https://github.com/One-Stop-Shopping/Grandmas-Cookbook.
 
-## Tech stack 
-- React 
+## Tech stack
+
+- React
 - Express
 - Node
 - PostgreSQL
@@ -11,7 +12,7 @@ Grandma's Cookbook is a recipe-sharing web application that allows users to brow
 
 ## Features
 
-- View recipes by category or search by keyword to query recipes from an API or web-scraping 
+- View recipes by category or search by keyword to query recipes from an API or web-scraping
 - Add new recipes
 - Edit or delete existing recipes
 - User authentication for recipe contributors
@@ -26,6 +27,10 @@ To run the application locally, follow these steps:
 3. Install the required packages: `npm install`
 4. Start the application: `npm start`
 5. Navigate to http://localhost:3000 in your web browser
+
+## Testing
+
+1. Run `npm run test` in root directory to run the built-in tests.
 
 ## Usage
 
