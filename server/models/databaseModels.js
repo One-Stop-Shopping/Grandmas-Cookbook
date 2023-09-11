@@ -4,7 +4,10 @@ require('dotenv').config();
 
 const pool = new Pool({
   // Secret PostgreSQL database URI stored in local .env
-  connectionString: process.env.DB_URI,
+  connectionString:
+    process.env.NODE_ENV === 'test'
+      ? process.env.DB_URI_TEST
+      : process.env.DB_URI,
 });
 
 /*

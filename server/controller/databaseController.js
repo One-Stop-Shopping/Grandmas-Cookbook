@@ -34,7 +34,8 @@ const camelCaseTheKey = (databaseRowsArray) => {
 */
 databaseController.getAllRecipes = (req, res, next) => {
   const allRecipeQuery = `SELECT * FROM recipes`;
-  db.query(allRecipeQuery)
+  return db
+    .query(allRecipeQuery)
     .then((data) => {
       res.locals = camelCaseTheKey(data.rows);
       return next();
@@ -60,7 +61,7 @@ databaseController.addRecipe = (req, res, next) => {
     tastyId,
     imagePath,
   } = req.body;
-  console.log('reach addRecipe');
+
   const addRecipeQuery = `INSERT INTO recipes (url, title, description, ingredientList, directions, tastyId, imagePath) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
   // To also cover Tasty API entries where description can be long.
   const values = [
@@ -73,7 +74,8 @@ databaseController.addRecipe = (req, res, next) => {
     res.locals.awsimagePath || imagePath,
   ];
 
-  db.query(addRecipeQuery, values)
+  return db
+    .query(addRecipeQuery, values)
     .then((data) => {
       res.locals = camelCaseTheKey(data.rows)[0];
       return next();
@@ -111,7 +113,8 @@ databaseController.updateRecipe = (req, res, next) => {
     parseInt(id),
   ];
 
-  db.query(updateRecipeQuery, values)
+  return db
+    .query(updateRecipeQuery, values)
     .then((data) => {
       res.locals = camelCaseTheKey(data.rows)[0];
       return next();
@@ -140,7 +143,8 @@ databaseController.updateImage = (req, res, next) => {
   `;
   const values = [parseInt(id), res.locals.awsimagePath];
 
-  db.query(updateImageQuery, values)
+  return db
+    .query(updateImageQuery, values)
     .then((data) => {
       res.locals = camelCaseTheKey(data.rows)[0];
       const oldImagePath = res.locals.oldimagepath;
@@ -186,7 +190,8 @@ databaseController.deleteRecipe = (req, res, next) => {
   `;
   const values = [parseInt(id)];
 
-  db.query(deleteRecipeQuery, values)
+  return db
+    .query(deleteRecipeQuery, values)
     .then((data) => {
       const imagePath = data.rows[0].imagepath;
       if (
@@ -229,7 +234,8 @@ databaseController.getUserRecipe = (req, res, next) => {
   WHERE users.id = $1;
   `;
   const values = [parseInt(id)];
-  db.query(queryString, values)
+  return db
+    .query(queryString, values)
     .then((data) => {
       res.locals = camelCaseTheKey(data.rows);
       return next();
